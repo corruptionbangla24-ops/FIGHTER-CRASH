@@ -1,0 +1,21 @@
+{
+  "name": "royal-aero-shooting-engine",
+  "version": "1.9.5",
+  "description": "Premium Asian AERO Jet Fighter Cosmic Space Arcade Locked on Port 7300",
+  "main": "server.js",
+  "scripts": {
+    "start": "PORT=7300 node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "express": "^4.21.2",
+    "path": "^0.12.7",
+    "socket.io": "^4.8.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Royal Casino Developer King",
+  "license": "MIT"
+}
