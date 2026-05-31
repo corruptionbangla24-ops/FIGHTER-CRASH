@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AERO - ROYAL SPACE ARCADE</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 🎰 PREMIUM HEADER CONTROLLER PANEL -->
+    <div class="header">
+        <div class="brand">
+            <div class="name">AERO FIGHTER</div>
+            <div class="game">GALAXY MISSILE BLAST ENGINE</div>
+        </div>
+        <div class="header-right">
+            <button class="sound-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
+            <div class="balance-box">৳ <span id="user-balance">0.00</span></div>
+        </div>
+    </div>
+
+    <!-- 🚀 REAL-TIME COSMIC ACQUISITION CANVAS GRID -->
+    <div class="fishing-arcade-zone">
+        <div class="ocean-canvas-frame" id="cosmic-viewport">
+            
+            <!-- Target Alien Starships Spawning Grid Array -->
+            <div class="swim-lane-layer">
+                <div class="fish-sprite scout" onclick="handleAeroMissileLaunch('SCOUT_DRONE')">🛸</div>
+                <div class="fish-sprite interceptor" onclick="handleAeroMissileLaunch('ALIEN_INTERCEPTOR')">🛸</div>
+                <div class="fish-sprite meteor" onclick="handleAeroMissileLaunch('METEOR_SHIELD')">☄️</div>
+                <div class="fish-sprite zeppelin" onclick="handleAeroMissileLaunch('WAR_ZEPPELIN')">✈️</div>
+                <div class="fish-sprite stealth" onclick="handleAeroMissileLaunch('CYBER_STEALTH')">🛩️</div>
+                <div class="fish-sprite galaxy-boss" onclick="handleAeroMissileLaunch('GALAXY_BOSS_AERO')">🪐</div>
+            </div>
+
+            <!-- Kinetic Weapon Flash Laser Layer -->
+            <div class="gunner-laser-tracker" id="laser-beam"></div>
+        </div>
+    </div>
+
+    <!-- 🏆 SCOREBOARD LIVE STATUS DISPLAY ENGINE -->
+    <div class="win-status-container" id="win-status-box">
+        <span id="win-text-msg">Adjust missile cost and tap the alien starships to shoot and harvest rewards!</span>
+    </div>
+
+    <!-- 🎛️ ARTILLERY GUN CONTROLS FOOTER INTERFACE -->
+    <div class="footer-controls">
+        <div class="play-section">
+            <div class="bet-selector">
+                <button class="bet-btn-nav" onclick="adjustMissilePower('minus')">−</button>
+                <div style="text-align: center; width: 80px;">
+                    <div style="font-size: 9px; color: #aaa; font-weight: bold;">MISSILE COST</div>
+                    <div style="font-size: 15px; font-weight: 900; color: #fff;" id="bet-display">৳১০</div>
+                </div>
+                <button class="bet-btn-nav" onclick="adjustMissilePower('plus')">+</button>
+            </div>
+
+            <!-- 🚀 প্রিমিয়াম ফাইটার জেট ব্লাস্ট বাটন নোড -->
+            <button class="play-btn" id="spin-btn" onclick="handleAeroMissileLaunch('GALAXY_BOSS_AERO')" style="background: none; border: none; padding: 0; cursor: pointer; outline: none;">
+                <div class="cannon-display-avatar" id="cannon-node" style="font-size: 36px; filter: drop-shadow(0 0 10px #ff3333); transition: 0.1s;">🚀</div>
+            </button>
+
+            <div class="icon-group">
+                <button class="icon-btn" id="auto-btn" onclick="toggleAutoLock()">🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔌 SOCKET GATEWAY COUPLING AND TRANSACTION ROUTER -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlUserId = urlParams.get('userId') || urlParams.get('id') || urlParams.get('username') || "guest_user";
+        const urlWallet = urlParams.get('wallet') || "main";
+        
+        const SERVER_URL = window.location.origin;
+
+        let balance = 0.00;
+        let currentBulletCost = 10; 
+        let isProcessingHit = false; 
+        let isAutoLocked = false;
+        let isMuted = false;
+
+        // 🧠 SECURE REAL-TIME TRANSACTION HARVEST ENGINE
+        async function handleAeroMissileLaunch(targetType) {
+            if (isProcessingHit) return;
+            isProcessingHit = true;
+
+            triggerWeaponFiringAnimation();
+            playAudio('spin');
+
+            try {
+                // Step 1: Ammunition মিসাইল ফায়ার এবং ওয়ালেট থেকে টাকা কাটার এপিআই কল
+                const shootResponse = await fetch(`${SERVER_URL}/api/aero-shoot`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: urlUserId,
+                        bulletCost: parseFloat(currentBulletCost),
+                        wallet: urlWallet
+                    })
+                });
+                const shootData = await shootResponse.json();
+
+                if (!shootData || shootData.success !== true) {
+                    alert(shootData.message || "❌ Missile Denied! Check BDT Account Balance.");
+                    isProcessingHit = false;
+                    return;
+                }
+
+                // লাইভ ব্যালেন্স রিফ্রেশার সিঙ্ক
+                balance = parseFloat(shootData.balance);
+                document.getElementById("user-balance").innerText = balance.toFixed(2);
+                propagateWalletRefreshEvents();
+
+                // Step 2: টার্গেটে হিট হওয়ার পর ৯৫% আরটিপি ক্যালকুলেশন চেক
+                const hitResponse = await fetch(`${SERVER_URL}/api/aero-hit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: urlUserId,
+                        targetType: targetType,
+                        bulletCost: parseFloat(currentBulletCost),
+                        wallet: urlWallet
+                    })
+                });
+                const hitData = await hitResponse.json();
+
+                if (hitData && hitData.success === true) {
+                    const msgBox = document.getElementById("win-status-box");
+                    const textMsg = document.getElementById("win-text-msg");
+
+                    if (hitData.captured === true) {
+                        playAudio('win');
+                        balance = parseFloat(hitData.balance);
+                        document.getElementById("user-balance").innerText = balance.toFixed(2);
+                        msgBox.className = "win-status-container win-glow-bar";
+                        textMsg.innerText = `🏆 TARGET DESTROYED! Vaporized ${targetType} at x${hitData.odds} odds. Added ৳${hitData.winAmount}!`;
+                    } else {
+                        playAudio('click');
+                        msgBox.className = "win-status-container lose-glow-bar";
+                        textMsg.innerText = `💨 Target Evaded! Enemy shield absorbed your tactical missile.`;
+                    }
+                    propagateWalletRefreshEvents();
+                }
+            } catch (err) {
+                console.error("Aero collision pipeline sync drop", err);
+            }
+            
+            isProcessingHit = false;
+        }
+
+        function triggerWeaponFiringAnimation() {
+            const cannon = document.getElementById("cannon-node");
+            cannon.className = "cannon-display-avatar weapon-fire-kickback";
+            setTimeout(() => cannon.className = "cannon-display-avatar", 120);
+        }
+
+        function propagateWalletRefreshEvents() {
+            if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
+            if (window.top) window.top.postMessage({ action: "refresh_wallet" }, "*");
+        }
+
+        // 🔌 BACKEND BALANCE REALTIME PUSH STREAM INTERCEPTOR
+        if (typeof io !== 'undefined') {
+            const socket = io();
+            socket.on("balanceUpdate", (data) => {
+                if (data && data.username === urlUserId) {
+                    fetchLiveBalance();
+                }
+            });
+        }
+
+        async function fetchLiveBalance() {
+            try {
+                const response = await fetch(`${SERVER_URL}/api/aero-balance?userId=${urlUserId}&wallet=${urlWallet}`);
+                const data = await response.json();
+                if (data && data.success) {
+                    balance = parseFloat(data.balance);
+                    document.getElementById("user-balance").innerText = balance.toFixed(2);
+                    propagateWalletRefreshEvents();
+                }
+            } catch (e) { console.error("Stateless balance interceptor exception bypassed"); }
+        }
+
+        window.onload = () => {
+            fetchLiveBalance();
+        };
+
+        // 🎛️ [প্লাস-মাইনাস নব সলভড এরর মোড]: ১ শতভাগ ওয়ান-শটে কাজ করবে ভাই ভাই
+        function adjustMissilePower(action) {
+            if (isProcessingHit) return;
+            
+            if (action === 'minus' && currentBulletCost > 1) {
+                if (currentBulletCost <= 10) currentBulletCost -= 1;
+                else if (currentBulletCost <= 100) currentBulletCost -= 10;
+                else currentBulletCost -= 100;
+            }
+            if (action === 'plus' && currentBulletCost < 5000) {
+                if (currentBulletCost < 10) currentBulletCost += 1;
+                else if (currentBulletCost < 100) currentBulletCost += 10;
+                else currentBulletCost += 100;
+            }
+            
+            if (currentBulletCost < 1) currentBulletCost = 1;
+            if (currentBulletCost > 5000) currentBulletCost = 5000;
+            
+            document.getElementById("bet-display").innerText = `৳${currentBulletCost}`;
+            playAudio('click');
+        }
+
+        function adjustBet(action) {
+            adjustMissilePower(action);
+        }
+
+                function toggleMute() {
+            isMuted = !isMuted;
+            document.getElementById("mute-btn").innerText = isMuted ? "🔇" : "🔊";
+            Object.values(slotSounds).forEach(s => s.muted = isMuted);
+        }
+
+        function toggleAutoLock() {
+            isAutoLocked = !isAutoLocked;
+            document.getElementById("auto-btn").classList.toggle("active", isAutoLocked);
+            playAudio('click');
+        }
+
+        // 🎯 [৪টি ওরিজিনাল প্রফেশনাল স্লট সাউন্ড ও বাফার গেটওয়ে লক ভাই ভাই]
+        const slotSounds = {
+            click: new Audio('click2.mp3'),
+            spin: new Audio('spin2.mp3'), 
+            win: new Audio('win2.mp3'),
+            wheel: new Audio('wheel1.mp3')
+        };
+        Object.values(slotSounds).forEach(s => s.load());
+
+        function playAudio(type) { 
+            if (isMuted) return; 
+            try { 
+                slotSounds[type].currentTime = 0; 
+                slotSounds[type].play(); 
+            } catch(e){} 
+        }
+    </script>
+</body>
+</html>
