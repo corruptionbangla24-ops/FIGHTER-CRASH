@@ -1,0 +1,183 @@
+/* ===================================================================================
+   🚀 AERO FIGHTER - LIVE CASINO MASTER STYLESHEET (বাটন ওপরে লিফটিং সুপ্রিম বর্ম)
+   =================================================================================== */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #05070c;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #ffffff;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+/* 🔒 [মেগা কিলার হেডার ব্লকার বর্ম ভাই ভাই]: লবির মেইন হেডারের সাথে ডাবল বক্স জ্যাম ওয়ান-শটে সাফ! */
+.header {
+    display: none !important;
+}
+
+/* 🏟️ ক্যাসিনো মেইন ডার্ক গ্যালাক্সি চাদর সিঙ্ক */
+body {
+    background: radial-gradient(circle at center, #0a1128 0%, #02040a 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    position: relative;
+}
+
+/* 🏟️ মেইন নিওন গ্যালাক্সি শুটার সারফেস কার্পেট ক্যানভাস Wrapper */
+.galaxy-arena-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    height: 310px; /* ওস্তাদ, বাটন ওপরে তোলার জায়গা করতে ক্যানভাস হাইট ২০ পিক্সেল কম্প্যাক্ট লক ভাই ভাই */
+    margin: 10px auto 0 auto;
+    background: #020408;
+    border: 3px solid #ff2255;
+    border-radius: 24px;
+    box-shadow: 0 0 25px rgba(255,34,85,0.25), inset 0 0 20px rgba(0,0,0,0.9);
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* 👾 ভাসমান স্পেসশিপ ও গ্রহ নক্ষত্রের উইজেট নোড */
+.space-object-target {
+    position: absolute;
+    width: 55px;
+    height: 55px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.1s ease;
+}
+
+.space-object-target img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* 📢 লাইভ মেসেজ স্ট্যাটাস বার */
+.win-status-container {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 10px;
+    margin: 4px 12px;
+    background: rgba(9, 12, 18, 0.6);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.02);
+}
+
+#win-text-msg {
+    font-size: 12px;
+    font-weight: 700;
+    color: #38bdf8;
+    letter-spacing: 0.3px;
+}
+
+/* 🎛️ নিচের মেইন গেম কন্ট্রোল প্যানেল ফুটার (মোবাইলের ফুল ফ্রেমে ওয়ান-শটে ওপরে লিফটিং লক ওস্তাদ!) */
+.footer-controls {
+    position: relative;
+    z-index: 50; 
+    background: #07090e;
+    border-top: 1px solid #161b29;
+    padding: 20px 15px 50px 15px; /* 👈 ওস্তাদ! প্যাডিং বাড়িয়ে মেইন বাটন প্যানেলটিকে কাটায় কাটায় ২৫ পিক্সেল ওপরে লিফটিং লক! */
+    box-shadow: 0 -8px 25px rgba(0,0,0,0.7);
+}
+
+.play-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    max-width: 450px;
+    margin: 0 auto;
+    margin-bottom: 25px; /* 👈 এই ক্রুশিয়াল লাইনের কারণে স্টেক বোতাম কোনোভাবে নিচে নামবে না ওস্তাদ! */
+}
+
+/* প্লাস-মাইনাস নব */
+.bet-btn-nav {
+    background: #111522;
+    border: 1px solid #20293d;
+    color: #ff2255;
+    font-size: 18px;
+    font-weight: 800;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 🚀 মেইন ফায়ার অ্যাকশন বোতাম (FIRE MISSILE কিলার নিওন গলো) */
+.play-btn {
+    flex: 1;
+    background: linear-gradient(180deg, #ff2255 0%, #b91c1c 100%);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 900;
+    border: none;
+    padding: 12px 0;
+    border-radius: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 12px rgba(255,34,85,0.3);
+    transition: all 0.15s ease;
+}
+
+.play-btn:active {
+    transform: scale(0.96);
+}
+
+.play-btn:disabled {
+    background: #141721 !important;
+    border-color: #1f2536 !important;
+    color: #4b5563 !important;
+    box-shadow: none !important;
+    cursor: not-allowed;
+}
+
+/* 🤖 অটো বোতাম আইকন গ্রিড */
+.icon-group { display: flex; align-items: center; }
+.icon-btn {
+    background: #111522;
+    border: 1px solid #20293d;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ff2255;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+.icon-btn.active { background: #ff2255; color: #ffffff; box-shadow: 0 0 10px rgba(255,34,85,0.4); }
+
+/* 💥 ব্লাস্ট বিস্ফোরণ এনিমেশন বর্ম */
+.ship-blasted-effect {
+    animation: blastPulse 0.4s ease-out forwards;
+}
+
+@keyframes blastPulse {
+    0% { transform: scale(1) rotate(0deg); filter: hue-rotate(0deg) brightness(1); }
+    50% { transform: scale(1.4) rotate(45deg); filter: hue-rotate(90deg) brightness(3); opacity: 0.8; }
+    100% { transform: scale(0) rotate(90deg); filter: hue-rotate(180deg) brightness(5); opacity: 0; }
+}
+
+/* 💥 উইন-লস নিয়ন গলোয়িং বর্ডার বর্ম */
+.win-glow-bar { border-color: rgba(0, 255, 136, 0.4) !important; background: rgba(0, 255, 136, 0.05) !important; }
+.win-glow-bar #win-text-msg { color: #00ff88 !important; }
+.lose-glow-bar { border-color: rgba(255, 51, 102, 0.4) !important; background: rgba(255, 51, 102, 0.05) !important; }
+.lose-glow-bar #win-text-msg { color: #ff3366 !important; }
