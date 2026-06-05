@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AERO FIGHTER - GALAXY MISSILE BLAST ENGINE</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 🎨 গ্যালাক্সি শুটার এরিনা সিএসএস ফ্রেম ইনজেকশন ভাই ভাই */
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #05070c; font-family: 'Segoe UI', Roboto, sans-serif; color: #fff; -webkit-tap-highlight-color: transparent; user-select: none; }
+        .header { display: none !important; } 
+        
+        body { 
+            background: radial-gradient(circle at center, #0a1128 0%, #02040a 100%); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            height: 100vh; 
+        }
+
+        /* 🏟️ মেইন নিওন গ্যালাক্সি শুটার সারফেস কার্পেট ক্যানভাস Wrapper */
+        .galaxy-arena-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            height: 330px;
+            margin: 10px auto 0 auto;
+            background: #020408;
+            border: 3px solid #ff2255;
+            border-radius: 24px;
+            box-shadow: 0 0 25px rgba(255,34,85,0.25), inset 0 0 20px rgba(0,0,0,0.9);
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* 👾 ভাসমান স্পেসশিপ ও গ্রহ নক্ষত্রের উইজেট গ্রিড */
+        .space-object-target {
+            position: absolute;
+            width: 55px;
+            height: 55px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.1s ease;
+        }
+        .space-object-target img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* 📢 লাইভ মেসেজ প্যানেল বার */
+        .win-status-container { position: relative; z-index: 10; text-align: center; padding: 10px; margin: 4px 12px; background: rgba(9, 12, 18, 0.6); border-radius: 10px; border: 1px solid rgba(255,255,255,0.02); }
+        #win-text-msg { font-size: 12px; font-weight: 700; color: #38bdf8; letter-spacing: 0.3px; }
+
+        /* 🎛️ নিচের মেইন গেম কন্ট্রোল প্যানেল ফুটার (১৫ পিক্সেল ওপরে লিফটিং সুপ্রিম লক) */
+        .footer-controls { position: relative; z-index: 50; background: #07090e; border-top: 1px solid #161b29; padding: 20px 15px 50px 15px; box-shadow: 0 -8px 25px rgba(0,0,0,0.7); }
+        .play-section { display: flex; justify-content: space-between; align-items: center; gap: 10px; max-width: 450px; margin: 0 auto; margin-bottom: 25px; }
+        .bet-btn-nav { background: #111522; border: 1px solid #20293d; color: #ff3366; font-size: 18px; font-weight: 800; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        
+        /* 🚀 ফায়ার বোতাম অ্যানিমেশন গ্লো */
+        .play-btn { flex: 1; background: linear-gradient(180deg, #ff2255 0%, #b91c1c 100%); color: #fff; font-size: 16px; font-weight: 900; border: none; padding: 12px 0; border-radius: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 12px rgba(255,34,85,0.3); }
+        .play-btn:disabled { background: #141721 !important; border-color: #1f2536 !important; color: #4b5563 !important; box-shadow: none !important; cursor: not-allowed; }
+        .icon-btn { background: #111522; border: 1px solid #20293d; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #ff3366; font-weight: bold; }
+        .icon-btn.active { background: #ff2255; color: #fff; box-shadow: 0 0 10px rgba(255,34,85,0.4); }
+
+        /* 💥 ব্লাস্ট বিস্ফোরণ এনিমেশন ফ্রেম */
+        .ship-blasted-effect { animation: blastPulse 0.4s ease-out forwards; }
+        @keyframes blastPulse {
+            0% { transform: scale(1) rotate(0deg); filter: hue-rotate(0deg) brightness(1); }
+            50% { transform: scale(1.4) rotate(45deg); filter: hue-rotate(90deg) brightness(3); opacity: 0.8; }
+            100% { transform: scale(0) rotate(90deg); filter: hue-rotate(180deg) brightness(5); opacity: 0; }
+        }
+
+        .win-glow-bar { border-color: rgba(0, 255, 136, 0.4) !important; background: rgba(0, 255, 136, 0.05) !important; }
+        .win-glow-bar #win-text-msg { color: #00ff88 !important; }
+        .lose-glow-bar { border-color: rgba(255, 51, 102, 0.4) !important; background: rgba(255, 51, 102, 0.05) !important; }
+        .lose-glow-bar #win-text-msg { color: #ff3366 !important; }
+    </style>
+</head>
+<body>
+
+    <div class="header" style="display:none !important;">
+        <div class="balance-box">৳ <span id="user-balance">0.00</span></div>
+    </div>
+
+    <!-- 🏟️ মেইন নিওন গ্যালাক্সি শুটার সারফেস কার্পেট ক্যানভাস Wrapper -->
+    <div class="galaxy-arena-wrapper" id="galaxy-playground">
+        <!-- 👽 ৪টি ওরিজিনাল ভাসমান এলিয়েন শিপ টার্গেট নোড (সরাসরি আপনার রুট ফাইলের নামের পাথ লক!) -->
+        <div class="space-object-target" id="ufo-target-1" style="top: 40px; left: 30px;" onclick="triggerMissileAttackShoot(1)"><img src="ufo.png" alt="UFO"></div>
+        <div class="space-object-target" id="ufo-target-2" style="top: 50px; right: 40px;" onclick="triggerMissileAttackShoot(2)"><img src="fighter.png" alt="Fighter"></div>
+        <div class="space-object-target" id="ufo-target-3" style="bottom: 60px; right: 50px;" onclick="triggerMissileAttackShoot(3)"><img src="saturn.png" alt="Saturn"></div>
+        <div class="space-object-target" id="ufo-target-4" style="bottom: 40px; left: 140px;" onclick="triggerMissileAttackShoot(4)"><img src="plane.png" alt="Plane"></div>
+    </div>
+
+    <!-- 📢 উইন-লস লাইভ ক্যাসিনো মেসেজ প্যানেল বার -->
+    <div class="win-status-container" id="win-status-box">
+        <span id="win-text-msg">Adjust missile cost and tap the alien starships to shoot and harvest rewards!</span>
+    </div>
+
+    <!-- 🎛️ অ্যাকশন কন্ট্রোল ফুটার প্যানেল বার -->
+    <div class="footer-controls">
+        <div class="play-section">
+            <button class="bet-btn-nav" onclick="adjustBet('minus')">-</button>
+            <div style="text-align: center; width: 65px;">
+                <div style="font-size: 9px; color: #aaa; font-weight: bold;">MISSILE COST</div>
+                <div style="font-size: 15px; font-weight: 900; color: #fff;" id="bet-display">৳১০</div>
+            </div>
+            <button class="bet-btn-nav" onclick="adjustBet('plus')">+</button>
+
+            <button class="play-btn" id="spin-btn" onclick="triggerMissileAttackShoot(0)">FIRE MISSILE</button>
+            
+            <div class="icon-group">
+                <button class="icon-btn" id="auto-btn" onclick="toggleAuto()">🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlUserId = urlParams.get('userId') || urlParams.get('id') || urlParams.get('username') || "guest_user";
+        const urlWallet = urlParams.get('wallet') || "main";
+        const SERVER_URL = window.location.origin;
+
+        let balance = 0.00;
+        let currentBet = 10;
+        let isSpinning = false;
+        let isAuto = false;
+        let autoInterval = null;
+
+        // ৪টি মহাজাগতিক টার্গেটের ওরিজিনাল কোঅর্ডিনেট ডাটাবেজ
+        const targetPositionsMap = {
+            1: { name: "🛸 এলিয়েন UFO", elId: "ufo-target-1" },
+            2: { name: "🛩️ ফাইটার জেট", elId: "ufo-target-2" },
+            3: { name: "🪐 শনি গ্রহ", elId: "ufo-target-3" },
+            4: { name: "✈️ লাইট প্লেন", elId: "ufo-target-4" }
+        };
+
+        // 🛸 গ্যালাক্সি মহাকাশে এলিয়েন শিপ অনবরত ভাসমান রাখার ডাইনামিক ভাসমান এনিমেশন লুপ
+        function runGalaxyObjectsFloatingLoop() {
+            let tick = 0;
+            setInterval(() => {
+                if (isSpinning) return;
+                tick += 0.05;
+                
+                document.getElementById("ufo-target-1").style.transform = `translateY(${Math.sin(tick) * 12}px) translateX(${Math.cos(tick) * 6}px)`;
+                document.getElementById("ufo-target-2").style.transform = `translateY(${Math.cos(tick) * 15}px) translateX(${Math.sin(tick) * 8}px)`;
+                document.getElementById("ufo-target-3").style.transform = `translateY(${Math.sin(tick * 0.8) * 10}px)`;
+                document.getElementById("ufo-target-4").style.transform = `translateX(${Math.cos(tick * 1.2) * 14}px)`;
+            }, 50);
+        }
+        runGalaxyObjectsFloatingLoop();
+
+        function adjustBet(action) {
+            if (isSpinning) return;
+            if (action === 'minus' && currentBet > 10) currentBet -= 10;
+            if (action === 'plus' && currentBet < 20000) currentBet += 10;
+            document.getElementById("bet-display").innerText = `৳${currentBet}`;
+            playAudio('click');
+        }
+        // 🛫 [🎰 মিসাইল লক ও ওরিজিনাল ব্লাস্ট বিস্ফোরণ এনিমেশন নোড]
+        async function triggerMissileAttackShoot(targetId) {
+            if (isSpinning || isSpinning === true) return; 
+            
+            // যদি মেইন ফায়ার বোতাম চাপা হয় তবে ১ নম্বর শিপকে ডিফল্ট লক করা হলো ওস্তাদ
+            let finalTarget = targetId === 0 ? 1 : targetId;
+            let targetConfig = targetPositionsMap[finalTarget];
+
+            isSpinning = true;
+            if (document.getElementById("spin-btn")) document.getElementById("spin-btn").disabled = true;
+            if (document.getElementById("win-status-box")) document.getElementById("win-status-box").className = "win-status-container";
+            if (document.getElementById("win-text-msg")) document.getElementById("win-text-msg").innerText = `🚀 মিসাইল ফায়ার করা হয়েছে... ${targetConfig.name} এর দিকে ধেয়ে যাচ্ছে ওস্তাদ...`;
+            
+            playAudio('spin'); // মিসাইল ওড়ার সাউন্ড ইফেক্ট ফায়ার লক!
+
+            try {
+                const response = await fetch(`${SERVER_URL}/api/fighter-shoot`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: urlUserId, amount: parseFloat(currentBet), wallet: urlWallet, targetShipId: finalTarget
+                    })
+                });
+
+                const serverRes = await response.json();
+                
+                if (serverRes.success || serverRes.success === true) {
+                    let targetGamePayload = serverRes.gameData || serverRes;
+                    
+                    // ⏱️ মিসাইল ট্র্যাভেলিং হাফ-সেকেন্ড অফসেট এনিমেশন হোল্ড
+                    setTimeout(() => {
+                        executeFighterBlastSettlement(targetGamePayload);
+                    }, 650);
+                } else {
+                    alert(serverRes.message || "❌ আপনার অ্যাকাউন্ট ব্যালেন্স জিরো বা অপ্রতুল! দয়া করে রিচার্জ করুন ওস্তাদ।");
+                    stopFighterState();
+                }
+            } catch (err) {
+                stopFighterState();
+            }
+        }
+
+        function executeFighterBlastSettlement(payload) {
+            let shipId = payload.targetShipId;
+            let targetConfig = targetPositionsMap[shipId];
+            const targetEl = document.getElementById(targetConfig.elId);
+
+            const msgBox = document.getElementById("win-status-box");
+            const textMsg = document.getElementById("win-text-msg");
+
+            if (payload.isBlasted === true || payload.status === "win") {
+                playAudio('win'); // মেগা বিস্ফোরণ অডিও ফায়ার!
+                
+                if (targetEl) targetEl.classList.add("ship-blasted-effect");
+                if (msgBox) msgBox.className = "win-status-container win-glow-bar";
+                
+                textMsg.innerHTML = `💥 <b>মেগা ব্লাস্ট সাকসেস ওস্তাদ!</b> ${targetConfig.name} সম্পূর্ণ ধ্বংস হয়েছে! <b>${payload.winMultiplier}X</b> ওッズ প্রফিট সহ ৳${payload.winAmount} ওয়ালেটে ক্রেডিট লক ভাই ভাই!`;
+                
+                // ৪ সেকেন্ড পর এলিয়েন শিপ আবার আকাশে নতুন করে পুনর্জন্ম (Respawn) নেবে ওস্তাদ ভাই ভাই!
+                setTimeout(() => {
+                    if (targetEl) {
+                        targetEl.classList.remove("ship-blasted-effect");
+                        targetEl.style.opacity = "1";
+                        targetEl.style.transform = "scale(1)";
+                    }
+                }, 4000);
+            } else {
+                playAudio('wheel'); // মিসাইল মিস হওয়ার নিওন সাউন্ড
+                if (msgBox) msgBox.className = "win-status-container lose-glow-bar";
+                textMsg.innerHTML = `❌ <b>মিসাইল মিস ওস্তাদ!</b> শিপ এর বর্ম ভাঙা যায়নি। আবার কড়া নিশানা লক করুন ভাই ভাই!`;
+            }
+
+            if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
+            stopFighterState();
+
+            if (isAuto) {
+                autoInterval = setTimeout(() => {
+                    if (isAuto) triggerMissileAttackShoot(0);
+                }, 3500);
+            }
+        }
+
+        if (typeof io !== 'undefined') {
+            const socket = io();
+            socket.on("balanceUpdate", (data) => {
+                if (data && data.username === urlUserId) {
+                    if (window.parent) window.parent.postMessage({ action: "refresh_wallet" }, "*");
+                }
+            });
+        }
+
+        function toggleAuto() {
+            isAuto = !isAuto;
+            const autoEl = document.getElementById("auto-btn");
+            if (autoEl) autoEl.classList.toggle('active', isAuto);
+            if (isAuto && !isSpinning) triggerMissileAttackShoot(0);
+            playAudio('click');
+        }
+
+        function stopFighterState() {
+            isSpinning = false;
+            if (document.getElementById("spin-btn")) document.getElementById("spin-btn").disabled = false;
+            if (!isAuto && autoInterval) clearTimeout(autoInterval);
+        }
+
+        const slotSounds = {
+            click: new Audio('spin2.mp3'), spin: new Audio('spin2.mp3'),
+            win: new Audio('win2.mp3'), wheel: new Audio('spin2.mp3')
+        };
+        Object.values(slotSounds).forEach(s => s.load());
+
+        function playAudio(type) {
+            try { if(slotSounds[type]) { slotSounds[type].currentTime = 0; slotSounds[type].play().catch(e => {}); } } catch(e) {}
+        }
+    </script>
+</body>
+</html>
+
+        
